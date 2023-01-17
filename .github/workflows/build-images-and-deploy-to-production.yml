@@ -56,3 +56,25 @@ jobs:
           key: ${{ secrets.PROD_DEPLOY_SSH_PRIVATE_KEY }}
           source: "docker/utility/prod.sh,.env, docker-compose.prod.yml,docker-compose.yml"
           target: "/root/ee-docker-demo"
+
+      - name: Log in to production server pull images, and deploy
+        uses: appleboy/ssh-action@master
+        with:
+          username: ${{ secrets.PROD_DEPLOY_SSH_USER }}
+          host: ${{ secrets.PROD_DEPLOY_SSH_HOST }}
+          key: ${{ secrets.PROD_DEPLOY_SSH_PRIVATE_KEY }}
+          script: |
+            cd /root/ee-docker-demo;
+
+            # Log in to github docker registry
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin;
+
+            # Pull Images
+            docker pull ghcr.io/buzzingpixel/eeca-meetup-jan-2023-app;
+            docker pull ghcr.io/buzzingpixel/eeca-meetup-jan-2023-db;
+
+            # Docker can be weird about .env, make sure local is concat into .env
+            cat /root/ee-docker-demo/.env.local >> /root/ee-docker-demo/.env
+
+            # Deploy new images
+            docker stack deploy --compose-file docker-compose.yml --compose-file docker-compose.prod.yml --prune ee-docker-demo
