@@ -158,4 +158,6 @@ COPY ./docker/.profile /root/.bashrc
 # Copy the front-end build
 COPY --from=frontend-builder /app/public/assets /var/www/public/assets
 
+HEALTHCHECK --interval=5s --timeout=5s --start-period=10s --retries=10 CMD curl --fail http://localhost/core/healthcheck || exit 1
+
 ENTRYPOINT ["/init"]
