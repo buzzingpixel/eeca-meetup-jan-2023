@@ -24,7 +24,7 @@ jobs:
           --platform=linux/amd64
           --build-arg BUILDKIT_INLINE_CACHE=1
           --cache-from ghcr.io/buzzingpixel/eeca-meetup-jan-2023-app
-          --file docker/db/Dockerfile
+          --file docker/application/Dockerfile
           --tag ghcr.io/buzzingpixel/eeca-meetup-jan-2023-app
           --push
           .

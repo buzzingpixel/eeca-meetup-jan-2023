@@ -28,7 +28,6 @@ services:
       labels:
         ## Traefik config ##
         - traefik.enable=true
-        - traefik.docker.network=traefik
         - traefik.http.services.eeca_meetup_jan_2023_prod.loadbalancer.server.port=80
 
         - traefik.http.routers.eeca_meetup_jan_2023_prod.entrypoints=web
