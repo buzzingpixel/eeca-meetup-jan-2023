@@ -42,7 +42,7 @@ return [
     'enable_devlog_alerts' => (string) getenv('ENABLE_DEV_LOG_ALERTS'),
     'enable_hit_tracking' => 'n',
     'enable_sql_caching' => 'n',
-    'encryption_key' => '7c0abbbffc04b6aa1e2bd8085617f1202c7668d4', // DON'T ACTUALLY COMMIT THIS! I just don't have time in this demo to demonstrate secrets
+    'encryption_key' => (string) getenv('ENCRYPTION_KEY'),
     'gzip_output' => 'n',
     'index_page' => '',
     'is_system_on' => 'y',
@@ -54,7 +54,7 @@ return [
     'profile_trigger' => uniqid(),
     'prv_msg_upload_path' => $imagesPath . '/pm_attachments/',
     'save_tmpl_files' => 'y',
-    'session_crypt_key' => '300f4ad53e60e205fa2b2bd754ff05f3781a4588', // DON'T ACTUALLY COMMIT THIS! I just don't have time in this demo to demonstrate secrets
+    'session_crypt_key' => (string) getenv('SESSION_CRYPT_KEY'),
     'share_analytics' => 'y',
     'show_ee_news' => 'n',
     'show_profiler' => (string) getenv('SHOW_PROFILER'),
