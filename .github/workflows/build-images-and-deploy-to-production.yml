@@ -1,0 +1,41 @@
+name: Build and deploy
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    name: Build images and push to registry
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Create buildx context
+        run: docker buildx create --use
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+
+      - name: Build app image
+        run: >
+          docker buildx build
+          --platform=linux/amd64
+          --build-arg BUILDKIT_INLINE_CACHE=1
+          --cache-from ghcr.io/buzzingpixel/eeca-meetup-jan-2023-app
+          --file docker/db/Dockerfile
+          --tag ghcr.io/buzzingpixel/eeca-meetup-jan-2023-app
+          --push
+          .
+
+      - name: Build db image
+        run: >
+          docker buildx build
+          --platform=linux/amd64
+          --build-arg BUILDKIT_INLINE_CACHE=1
+          --cache-from ghcr.io/buzzingpixel/eeca-meetup-jan-2023-db
+          --file docker/db/Dockerfile
+          --tag ghcr.io/buzzingpixel/eeca-meetup-jan-2023-db
+          --push
+          .
