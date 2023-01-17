@@ -16,10 +16,8 @@ services:
       - traefik.http.routers.teg_local.entrypoints=web
       - traefik.http.routers.teg_local.rule=Host(`eeca-meetup-jan-2023.localtest.me`)
     networks:
-      web:
-      default:
-        aliases:
-          - eeca-meetup-jan-2023.localtest.me
+      - traefik
+      - default
 
   db:
     restart: always
@@ -27,5 +25,6 @@ services:
       - "28620:3306"
 
 networks:
-  web:
+  traefik:
     name: traefik-dev_default
+    external: true
