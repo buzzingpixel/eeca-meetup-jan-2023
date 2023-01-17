@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+  app:
+    env_file:
+      - .env
+      - .env.local
+    container_name: eeca-meetup-jan-2023-app
+    image: ghcr.io/buzzingpixel/eeca-meetup-jan-2023-app
+    environment:
+      HOSTNAME: eeca-meetup-jan-2023-app
+    expose:
+      - 80
+    networks:
+      default:
+
+  db:
+    env_file:
+      - .env
+      - .env.local
+    image: ghcr.io/buzzingpixel/eeca-meetup-jan-2023-db
+    container_name: eeca-meetup-jan-2023-db
+    environment:
+      HOSTNAME: eeca-meetup-jan-2023-db
+      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db-volume:/var/lib/mysql
+    networks:
+      default:
+        aliases:
+          - eeca-meetup-jan-2023-db
+
+volumes:
+  db-volume:

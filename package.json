@@ -1,0 +1,10 @@
+{
+    "license": "UNLICENSED",
+    "scripts": {
+      "prod": "npx tailwindcss -i ./assets/css/main.css -o public/assets/css/style.min.css --minify",
+      "dev": "npx tailwindcss -i ./assets/css/main.css -o public/assets/css/style.min.css --watch"
+    },
+    "devDependencies": {
+        "tailwindcss": "^3.2.4"
+    }
+}

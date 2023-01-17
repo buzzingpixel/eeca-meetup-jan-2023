@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+COMPOSE_DOCKER_CLI_BUILD=1
+DOCKER_BUILDKIT=1
+
+# Arguments
+cmd="${1}";
+allArgs="${@}";
+allArgsExceptFirst="${@:2}";
+secondArg="${2}";
+
+# Ensure .env.local exists
+if [[ ! -f ".env.local" ]]; then
+    touch .env.local;
+fi
+
+# Source all of our executable files — these should contain functions that can be run
+for f in $(find devSrc -name '*.sh'); do
+    chmod +x ${f};
+    source ${f};
+done
+
+# If no command/function name to run was provided, list out the functions available
+if [[ -z "${cmd}" || ${secondArg} == "help" ]]; then
+    source devSrc/.help;
+    exit 0;
+fi
+
+if _function_exists "${cmd}"; then
+    # Run the specified function (${cmd}) and pass it any arguments specified (${allArgsExceptFirst})
+    ${cmd} "${allArgsExceptFirst}";
+    exit;
+fi
+
+printf "${Red}The specified command does not exist\n${Reset}";

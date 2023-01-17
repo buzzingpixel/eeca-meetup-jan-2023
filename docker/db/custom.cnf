@@ -1,0 +1,4 @@
+[mysqld]
+sql-mode=""
+innodb_strict_mode = 0
+innodb_log_file_size = 512M

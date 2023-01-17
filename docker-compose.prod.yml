@@ -1,0 +1,61 @@
+version: '3.7'
+
+services:
+  utility:
+    deploy:
+      rollback_config:
+        order: start-first
+      update_config:
+        order: start-first
+    env_file:
+      - .env
+      - .env.local
+    image: ubuntu:18.04
+    restart: always
+    container_name: eeca-meetup-jan-2023-utility
+    volumes:
+      - .:/var/www
+      - cache-volume:/cache-volume
+      - uploads-volume:/uploads-volume
+    command: bash -c "chmod +x /var/www/docker/utility/prod.sh && /var/www/docker/utility/prod.sh"
+
+  app:
+    deploy:
+      rollback_config:
+        order: start-first
+      update_config:
+        order: start-first
+      labels:
+        ## Traefik config ##
+        - traefik.enable=true
+        - traefik.docker.network=traefik-prod_default
+
+        - traefik.http.routers.eeca-meetup-jan-2023_prod.entrypoints=web
+        - traefik.http.routers.eeca-meetup-jan-2023_prod.rule=Host(`eeca-meetup-jan-2023.buzzingpixel.com`)
+    restart: always
+    volumes:
+      - cache-volume:/var/www/system/user/cache
+      - uploads-volume:/var/www/public/uploads
+    networks:
+      web:
+      default:
+        aliases:
+          - eeca-meetup-jan-2023.buzzingpixel.com
+
+  db:
+    deploy:
+      rollback_config:
+        order: start-first
+      update_config:
+        order: start-first
+    restart: always
+
+networks:
+  web:
+    name: traefik-prod_default
+    external: true
+
+volumes:
+  cache-volume:
+  uploads-volume:
+

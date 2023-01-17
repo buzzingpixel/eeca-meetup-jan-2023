@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  app:
+    restart: always
+    environment:
+      ENABLE_PHP_DEV_CONFIG: 1
+    volumes:
+      - .:/var/www:delegated
+    labels:
+      ## Traefik config ##
+      - traefik.enable=true
+      - traefik.docker.network=traefik-dev_default
+
+      # Local Traefik config
+      - traefik.http.routers.teg_local.entrypoints=web
+      - traefik.http.routers.teg_local.rule=Host(`eeca-meetup-jan-2023.localtest.me`)
+    networks:
+      web:
+      default:
+        aliases:
+          - eeca-meetup-jan-2023.localtest.me
+
+  db:
+    restart: always
+    ports:
+      - "28620:3306"
+
+networks:
+  web:
+    name: traefik-dev_default

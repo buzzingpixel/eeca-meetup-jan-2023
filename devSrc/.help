@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+if [[ ${secondArg} == "help" ]]; then
+    if ! _function_exists ${cmd}; then
+        printf "That command does not exist.\n";
+
+        exit 1;
+    fi
+
+    if _function_exists "${cmd}-help-extended"; then
+        printf "\n";
+        printf "./dev ${cmd}";
+        printf "\n";
+        ${cmd}-help-extended;
+        printf "\n";
+    elif _function_exists "${cmd}-help"; then
+        printf "./dev ${cmd} ";
+        ${cmd}-help;
+    else
+        printf "./dev ${cmd} (no help data exists)";
+    fi
+
+    printf "\n";
+
+    exit 0;
+fi
+
+printf "The following commands are available:\n";
+
+IFS=$'\n'
+for f in $(declare -F); do
+    func=${f:11};
+
+    if [[ ${func} == "_function_exists" ]]; then
+        continue;
+    fi
+
+    if [[ ${func} == *-help ]]; then
+        continue;
+    fi
+
+    if [[ ${func} == *-help-extended ]]; then
+        continue;
+    fi
+
+    if [[ ${func} == _* ]]; then
+        continue;
+    fi
+
+    printf "  ./dev ${func} ";
+
+    if _function_exists "${func}-help"; then
+        ${func}-help
+    fi
+
+    printf "\n";
+done
+
+printf "";
+printf "To get more information about a command, use 'help' as the first argument.";
+printf "\n";
