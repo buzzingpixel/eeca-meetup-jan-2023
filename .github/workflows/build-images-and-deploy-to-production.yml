@@ -77,4 +77,4 @@ jobs:
             cat /root/ee-docker-demo/.env.local >> /root/ee-docker-demo/.env
 
             # Deploy new images
-            docker stack deploy --compose-file docker-compose.yml --compose-file docker-compose.prod.yml --prune ee-docker-demo
+            docker stack deploy --compose-file docker-compose.yml --compose-file docker-compose.prod.yml --prune --with-registry-auth --resolve-image always ee-docker-demo
